@@ -5,6 +5,7 @@ import axios from "axios";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
 import DownloadReportButton from "../components/DownloadReportButton";
+import { API_BASE_URL } from "../config/appConfig";
 
 import {
   downloadSavedResume,
@@ -13,7 +14,6 @@ import {
 } from "../utils/resumeStorage";
 
 import "../styles/interview-experience.css";
-import { API_BASE_URL } from "../config/appConfig";
 
 const MAX_QUESTIONS = 5;
 const MAX_RESUME_SIZE = 2 * 1024 * 1024;
@@ -60,6 +60,9 @@ function InterviewRoomPage() {
 
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  const [sessionPlan, setSessionPlan] = useState([]);
+  const [recentQuestions, setRecentQuestions] = useState([]);
 
   const recognitionRef = useRef(null);
 
@@ -114,6 +117,28 @@ function InterviewRoomPage() {
       isActive = false;
     };
   }, [user, isResumeMode]);
+
+  const getRecentQuestions = async () => {
+    if (!user) {
+      return [];
+    }
+
+    const { data, error } = await supabase
+      .from("interview_answers")
+      .select("question")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(20);
+
+    if (error) {
+      console.warn("Could not load previous questions:", error.message);
+      return [];
+    }
+
+    return (data || [])
+      .map((item) => item.question)
+      .filter(Boolean);
+  };
 
   const getAnswerValidationError = (text) => {
     const trimmedText = text.trim();
@@ -348,6 +373,7 @@ function InterviewRoomPage() {
     setSavedInterviewId(null);
     setVoiceMessage("");
     setVoiceError(false);
+    setSessionPlan([]);
 
     try {
       let activeResumeText = resumeText;
@@ -384,6 +410,10 @@ function InterviewRoomPage() {
         );
       }
 
+      const savedQuestions = await getRecentQuestions();
+
+      setRecentQuestions(savedQuestions);
+
       const response = await axios.post(
         `${API_BASE_URL}/start-interview`,
         {
@@ -392,6 +422,7 @@ function InterviewRoomPage() {
           job_description: isJobDescriptionMode
             ? activeJobDescription
             : null,
+          recent_questions: savedQuestions,
         }
       );
 
@@ -400,6 +431,7 @@ function InterviewRoomPage() {
       }
 
       setCurrentQuestion(response.data.question);
+      setSessionPlan(response.data.session_plan || []);
     } catch (error) {
       setErrorMessage(
         error.response?.data?.detail ||
@@ -503,6 +535,12 @@ function InterviewRoomPage() {
           job_description: isJobDescriptionMode
             ? jobDescription.trim()
             : null,
+          session_plan: sessionPlan,
+          recent_questions: [
+            ...recentQuestions,
+            ...history.map((item) => item.question),
+            questionBeingAnswered,
+          ],
         }
       );
 
@@ -596,7 +634,7 @@ function InterviewRoomPage() {
         <p className="section-label">LIVE PRACTICE SESSION</p>
         <h1>{interviewType}</h1>
         <p>
-          Answer five questions with meaningful examples to receive clear,
+          Answer five varied questions with meaningful examples to receive
           evidence-based feedback and a saved PrepPilot report.
         </p>
 
@@ -626,10 +664,10 @@ function InterviewRoomPage() {
 
             <p>
               {isResumeMode
-                ? "PrepPilot will ask questions based on your real projects, skills, internships, and certifications."
+                ? "PrepPilot will ask varied questions based on your real projects, skills, internships, and certifications."
                 : isJobDescriptionMode
-                ? "PrepPilot will tailor questions around the responsibilities, skills, and technologies in the job description."
-                : "Your completed session will be saved so you can review feedback and improved answers later."}
+                ? "PrepPilot will tailor varied questions around the responsibilities, skills, and technologies in the job description."
+                : "Each session covers different interview areas and avoids recently saved questions where possible."}
             </p>
 
             {isResumeMode && (

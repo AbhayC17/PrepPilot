@@ -1,0 +1,46 @@
+.job-description-panel {
+  margin-top: 20px;
+  padding: 16px;
+  border: 1px solid #cbd8f6;
+  border-radius: 12px;
+  background: #f8faff;
+}
+
+.job-description-panel label {
+  display: block;
+  margin-bottom: 9px;
+  color: #2f417c;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.job-description-panel textarea {
+  width: 100%;
+  min-height: 180px;
+  padding: 13px;
+  border: 1px solid #d5e0f5;
+  border-radius: 9px;
+  resize: vertical;
+  outline: none;
+  color: #2b385d;
+  background: white;
+  line-height: 1.6;
+}
+
+.job-description-panel textarea:focus {
+  border-color: #5979e9;
+  box-shadow: 0 0 0 3px rgba(89, 121, 233, 0.13);
+}
+
+.job-description-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-top: 9px;
+  color: #71809b;
+  font-size: 11px;
+}
+
+.job-description-meta strong {
+  color: #3d5fc6;
+}

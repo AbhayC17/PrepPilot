@@ -1,0 +1,135 @@
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  color: #ffffff;
+  background: #536fc8;
+}
+
+:focus-visible {
+  outline: 3px solid rgba(83, 111, 200, 0.35);
+  outline-offset: 3px;
+}
+
+button,
+a,
+input,
+textarea,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+a {
+  touch-action: manipulation;
+}
+
+textarea {
+  font-family: inherit;
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f4f6fb;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 3px solid #f4f6fb;
+  border-radius: 999px;
+  background: #c4cde3;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9daed5;
+}
+
+.pp-inline-loader {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  color: #687799;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.pp-inline-loader::before {
+  width: 13px;
+  height: 13px;
+  border: 2px solid #d6ddef;
+  border-top-color: #586fc0;
+  border-radius: 50%;
+  animation: pp-spin 700ms linear infinite;
+  content: "";
+}
+
+.pp-skeleton {
+  overflow: hidden;
+  border-radius: 10px;
+  background: linear-gradient(
+    90deg,
+    #eef1f7 25%,
+    #f8f9fc 40%,
+    #eef1f7 60%
+  );
+  background-size: 400% 100%;
+  animation: pp-shimmer 1.25s ease infinite;
+}
+
+@keyframes pp-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pp-shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media print {
+  .app-sidebar,
+  .app-topbar,
+  .pp-report-actions,
+  .back-button,
+  .pp-back-link {
+    display: none !important;
+  }
+
+  .app-main {
+    margin-left: 0 !important;
+  }
+
+  .app-content {
+    padding: 0 !important;
+  }
+
+  body {
+    background: #ffffff !important;
+  }
+}

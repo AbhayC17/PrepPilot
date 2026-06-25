@@ -1,0 +1,266 @@
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router";
+
+import { supabase } from "../lib/supabase";
+import { useAuth } from "../context/AuthContext";
+import DownloadReportButton from "../components/DownloadReportButton";
+
+import "../styles/interview-experience.css";
+
+function InterviewReportPage() {
+  const { interviewId } = useParams();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const [interview, setInterview] = useState(null);
+  const [answers, setAnswers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    const loadReport = async () => {
+      if (!user) {
+        return;
+      }
+
+      setLoading(true);
+      setErrorMessage("");
+
+      const { data: interviewData, error: interviewError } = await supabase
+        .from("interviews")
+        .select(
+          "id, interview_type, overall_score, readiness_level, summary, final_report, completed_at, created_at"
+        )
+        .eq("id", interviewId)
+        .eq("user_id", user.id)
+        .single();
+
+      if (interviewError) {
+        setErrorMessage("Interview report not found.");
+        setLoading(false);
+        return;
+      }
+
+      const { data: answerData, error: answerError } = await supabase
+        .from("interview_answers")
+        .select(
+          "question_number, question, user_answer, feedback, evidence, scores, improved_answer"
+        )
+        .eq("interview_id", interviewId)
+        .eq("user_id", user.id)
+        .order("question_number", { ascending: true });
+
+      if (answerError) {
+        setErrorMessage(answerError.message);
+        setLoading(false);
+        return;
+      }
+
+      setInterview(interviewData);
+      setAnswers(answerData || []);
+      setLoading(false);
+    };
+
+    loadReport();
+  }, [interviewId, user]);
+
+  const formatDate = (dateValue) => {
+    if (!dateValue) {
+      return "Date unavailable";
+    }
+
+    return new Intl.DateTimeFormat("en-IN", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    }).format(new Date(dateValue));
+  };
+
+  const formatLabel = (label) =>
+    String(label || "")
+      .replaceAll("_", " ")
+      .replace(/\b\w/g, (letter) => letter.toUpperCase());
+
+  if (loading) {
+    return (
+      <div className="empty-dashboard-card">
+        <p>Loading your PrepPilot report...</p>
+      </div>
+    );
+  }
+
+  if (errorMessage || !interview) {
+    return (
+      <div className="empty-dashboard-card">
+        <h3>Unable to open this report</h3>
+        <p>{errorMessage || "This saved report is unavailable."}</p>
+
+        <button
+          className="session-primary-button"
+          onClick={() => navigate("/history")}
+        >
+          Back to Previous Interviews
+        </button>
+      </div>
+    );
+  }
+
+  const report = interview.final_report || {};
+
+  return (
+    <div className="pp-report-page">
+      <div className="pp-report-topbar">
+        <button
+          className="pp-back-link"
+          onClick={() => navigate("/history")}
+        >
+          ← Back to Previous Interviews
+        </button>
+      </div>
+
+      <section className="pp-page-hero">
+        <p className="section-label">SAVED INTERVIEW REPORT</p>
+        <h1>{interview.interview_type}</h1>
+        <p>{formatDate(interview.completed_at || interview.created_at)}</p>
+
+        <div className="pp-context-chips">
+          <span className="pp-context-chip">Saved feedback</span>
+          <span className="pp-context-chip">
+            {answers.length}-question review
+          </span>
+          <span className="pp-context-chip">PDF available</span>
+        </div>
+      </section>
+
+      <section className="pp-report-card">
+        <div className="pp-report-heading-row">
+          <div>
+            <p className="section-label">FINAL PERFORMANCE</p>
+            <h2>Interview summary</h2>
+          </div>
+
+          <div className="pp-overall-score">
+            <span>OVERALL SCORE</span>
+            <strong>{interview.overall_score}/10</strong>
+          </div>
+        </div>
+
+        <div className="pp-readiness-card">
+          <span>Interview readiness</span>
+          <strong>{interview.readiness_level}</strong>
+        </div>
+
+        <div className="pp-feedback-card pp-report-summary">
+          <h3>Overall summary</h3>
+          <p>{interview.summary}</p>
+        </div>
+
+        <div className="pp-report-grid">
+          <div className="pp-report-list-card">
+            <h3>Your strengths</h3>
+
+            <ul>
+              {(report.strengths || []).map((item, index) => (
+                <li key={index}>{item}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="pp-report-list-card">
+            <h3>Areas to improve</h3>
+
+            <ul>
+              {(report.improvement_areas || []).map((item, index) => (
+                <li key={index}>{item}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div className="pp-report-list-card" style={{ marginTop: "14px" }}>
+          <h3>Your action plan</h3>
+
+          <ol>
+            {(report.action_plan || []).map((item, index) => (
+              <li key={index}>{item}</li>
+            ))}
+          </ol>
+        </div>
+
+        <div className="pp-report-actions">
+          <DownloadReportButton interviewId={interview.id} />
+
+          <button
+            className="session-primary-button"
+            onClick={() => navigate("/interview-modes")}
+          >
+            Practice again
+          </button>
+        </div>
+      </section>
+
+      <section className="pp-answer-review-list">
+        <div className="page-title-block">
+          <p className="section-label">QUESTION-BY-QUESTION REVIEW</p>
+          <h2>Your answers and detailed feedback</h2>
+          <p>
+            Review what you said, why it was evaluated that way, and how you
+            can improve the answer next time.
+          </p>
+        </div>
+
+        {answers.map((item) => (
+          <article className="pp-answer-review-card" key={item.question_number}>
+            <p className="pp-review-question-label">
+              QUESTION {item.question_number}
+            </p>
+
+            <h3>{item.question}</h3>
+
+            <div className="pp-feedback-card">
+              <h3>Your answer</h3>
+              <p>{item.user_answer}</p>
+            </div>
+
+            <div className="pp-review-score-grid">
+              {Object.entries(item.scores || {}).map(([key, value]) => (
+                <div className="pp-score-card" key={key}>
+                  <span>{formatLabel(key)}</span>
+                  <strong>{value}/10</strong>
+                </div>
+              ))}
+            </div>
+
+            <div className="pp-feedback-card">
+              <h3>Coach feedback</h3>
+              <p>{item.feedback}</p>
+            </div>
+
+            {item.evidence?.length > 0 && (
+              <div className="pp-feedback-card">
+                <h3>Evidence used</h3>
+
+                <ul className="pp-evidence-list">
+                  {item.evidence.map((evidence, index) => (
+                    <li key={index}>{evidence}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {item.improved_answer && (
+              <div className="pp-feedback-card pp-feedback-card-improved">
+                <h3>Improved answer direction</h3>
+                <p>{item.improved_answer}</p>
+              </div>
+            )}
+          </article>
+        ))}
+      </section>
+    </div>
+  );
+}
+
+export default InterviewReportPage;

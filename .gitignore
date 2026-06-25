@@ -1,18 +1,18 @@
-# Environment variables and secrets
+# Secrets
 .env
 .env.local
 *.env
+
+# Python virtual environments
+venv/
+backend/venv/
+.venv/
 
 # Node modules
 node_modules/
 frontend/node_modules/
 
-# Python virtual environment
-venv/
-backend/venv/
-.venv/
-
-# Build folders
+# Builds
 dist/
 frontend/dist/
 

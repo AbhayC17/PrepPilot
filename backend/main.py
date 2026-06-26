@@ -48,80 +48,113 @@ MAX_RESUME_FILE_SIZE = 2 * 1024 * 1024
 MAX_RESUME_TEXT_LENGTH = 6000
 MAX_JOB_DESCRIPTION_LENGTH = 6000
 
+
+def competency(competency_id, label, focus):
+    return {
+        "id": competency_id,
+        "label": label,
+        "focus": focus,
+    }
+
+
 QUESTION_FOCUS_BANK = {
     "HR Interview": [
-        "personal introduction and career motivation",
-        "teamwork and communication",
-        "a challenge, failure, or learning experience",
-        "strengths and areas for improvement",
-        "a workplace scenario and decision-making",
-        "leadership, ownership, or initiative",
-        "handling feedback or conflict",
+        competency("motivation", "Career Motivation", "personal introduction and career motivation"),
+        competency("teamwork", "Teamwork and Communication", "teamwork and communication"),
+        competency("learning", "Learning from Challenges", "a challenge, failure, or learning experience"),
+        competency("self_awareness", "Self-Awareness", "strengths and areas for improvement"),
+        competency("decision_making", "Decision-Making", "a workplace scenario and decision-making"),
+        competency("ownership", "Ownership and Initiative", "leadership, ownership, or initiative"),
+        competency("feedback_conflict", "Feedback and Conflict", "handling feedback or conflict"),
     ],
     "Technical Interview": [
-        "a core programming or computer science concept",
-        "project implementation and technical architecture",
-        "debugging or troubleshooting approach",
-        "database, API, or backend design",
-        "an edge case, trade-off, or performance decision",
-        "testing and code quality",
-        "security or reliability in a practical project",
+        competency("core_concepts", "Core Concepts", "a core programming or computer science concept"),
+        competency("project_architecture", "Project Architecture", "project implementation and technical architecture"),
+        competency("debugging", "Debugging", "debugging or troubleshooting approach"),
+        competency("api_database", "API and Database Design", "database, API, or backend design"),
+        competency("tradeoffs", "Trade-offs and Edge Cases", "an edge case, trade-off, or performance decision"),
+        competency("testing", "Testing and Code Quality", "testing and code quality"),
+        competency("security_reliability", "Security and Reliability", "security or reliability in a practical project"),
     ],
     "DSA Interview": [
-        "data structure selection",
-        "algorithm design and time complexity",
-        "edge cases and test cases",
-        "optimisation approach",
-        "step-by-step problem-solving explanation",
-        "recursion, iteration, or dynamic programming",
-        "space complexity and practical constraints",
+        competency("data_structures", "Data Structure Selection", "data structure selection"),
+        competency("algorithms", "Algorithm Design", "algorithm design and time complexity"),
+        competency("edge_cases", "Edge Cases and Testing", "edge cases and test cases"),
+        competency("optimization", "Optimisation", "optimisation approach"),
+        competency("reasoning", "Step-by-Step Reasoning", "step-by-step problem-solving explanation"),
+        competency("recursion_dp", "Recursion or Dynamic Programming", "recursion, iteration, or dynamic programming"),
+        competency("space_complexity", "Space Complexity", "space complexity and practical constraints"),
     ],
     "Frontend Interview": [
-        "React or JavaScript concept",
-        "UI state management or component design",
-        "API integration and error handling",
-        "performance or responsiveness",
-        "a frontend debugging scenario",
-        "accessibility or user experience",
-        "authentication or protected frontend routes",
+        competency("frontend_core", "React and JavaScript", "a React or JavaScript concept"),
+        competency("component_design", "Component and State Design", "UI state management or component design"),
+        competency("frontend_api", "API Integration", "API integration and error handling"),
+        competency("frontend_performance", "Performance and Responsiveness", "performance or responsiveness"),
+        competency("frontend_debugging", "Frontend Debugging", "a frontend debugging scenario"),
+        competency("accessibility", "Accessibility and UX", "accessibility or user experience"),
+        competency("frontend_auth", "Frontend Authentication", "authentication or protected frontend routes"),
     ],
     "Backend Interview": [
-        "API design and request flow",
-        "authentication or security",
-        "database design or querying",
-        "error handling and debugging",
-        "scalability, performance, or system trade-offs",
-        "validation and safe input handling",
-        "logging, monitoring, or reliability",
+        competency("api_design", "API Design", "API design and request flow"),
+        competency("backend_security", "Authentication and Security", "authentication or security"),
+        competency("database_design", "Database Design", "database design or querying"),
+        competency("backend_debugging", "Error Handling and Debugging", "error handling and debugging"),
+        competency("scalability", "Scalability and Trade-offs", "scalability, performance, or system trade-offs"),
+        competency("validation", "Validation and Safe Input Handling", "validation and safe input handling"),
+        competency("reliability", "Logging and Reliability", "logging, monitoring, or reliability"),
     ],
     "Resume-Based Interview": [
-        "a resume project and your personal contribution",
-        "technical decisions made in a project",
-        "a challenge faced and how you solved it",
-        "skills, certifications, or internship experience",
-        "project outcome, learning, or improvement",
-        "a project trade-off or alternative approach",
-        "how you would improve one resume project",
+        competency("resume_contribution", "Personal Contribution", "a resume project and your personal contribution"),
+        competency("resume_decisions", "Technical Decisions", "technical decisions made in a project"),
+        competency("resume_challenge", "Problem-Solving", "a challenge faced and how you solved it"),
+        competency("resume_background", "Skills and Experience", "skills, certifications, or internship experience"),
+        competency("resume_outcome", "Results and Learning", "project outcome, learning, or improvement"),
+        competency("resume_tradeoffs", "Project Trade-offs", "a project trade-off or alternative approach"),
+        competency("resume_improvement", "Project Improvement", "how you would improve one resume project"),
     ],
     "Job Description-Based Interview": [
-        "a key skill mentioned in the job description",
-        "a responsibility mentioned in the role",
-        "a relevant technical scenario for the role",
-        "a project example matching the role requirements",
-        "an edge case or practical decision related to the role",
-        "communication or collaboration required by the role",
-        "how you would learn a required unfamiliar technology",
+        competency("role_skill", "Role Skill Match", "a key skill mentioned in the job description"),
+        competency("role_responsibility", "Role Responsibility", "a responsibility mentioned in the role"),
+        competency("role_scenario", "Role-Based Scenario", "a relevant technical scenario for the role"),
+        competency("role_project_fit", "Project Fit", "a project example matching the role requirements"),
+        competency("role_tradeoffs", "Practical Decision-Making", "an edge case or practical decision related to the role"),
+        competency("role_collaboration", "Collaboration", "communication or collaboration required by the role"),
+        competency("role_learning", "Learning Plan", "how you would learn a required unfamiliar technology"),
     ],
     "default": [
-        "personal background and motivation",
-        "technical or practical knowledge",
-        "problem-solving approach",
-        "project or real-world experience",
-        "an improvement or scenario-based question",
-        "debugging or decision-making",
-        "learning and adaptability",
+        competency("background", "Background and Motivation", "personal background and motivation"),
+        competency("knowledge", "Practical Knowledge", "technical or practical knowledge"),
+        competency("problem_solving", "Problem-Solving", "problem-solving approach"),
+        competency("experience", "Experience", "project or real-world experience"),
+        competency("scenario", "Scenario Handling", "an improvement or scenario-based question"),
+        competency("debugging_decisions", "Debugging and Decisions", "debugging or decision-making"),
+        competency("adaptability", "Learning and Adaptability", "learning and adaptability"),
     ],
 }
+
+
+class CompetencyPlanItem(BaseModel):
+    id: str
+    label: str
+    focus: str
+
+
+class PriorAnswer(BaseModel):
+    question: str
+    answer: str
+    competency_label: Optional[str] = None
+
+
+class CompetencyAssessment(BaseModel):
+    performance_level: str = "Not assessed"
+    demonstrated: List[str] = Field(default_factory=list)
+    improvement_focus: str = ""
+
+
+class ConsistencyCheck(BaseModel):
+    status: str = "not_enough_information"
+    note: str = ""
+    compared_with: str = ""
 
 
 class StartInterviewRequest(BaseModel):
@@ -138,8 +171,10 @@ class InterviewRequest(BaseModel):
     question_number: int
     resume_text: Optional[str] = None
     job_description: Optional[str] = None
-    session_plan: List[str] = Field(default_factory=list)
+    session_plan: List[CompetencyPlanItem] = Field(default_factory=list)
+    current_competency: Optional[CompetencyPlanItem] = None
     recent_questions: List[str] = Field(default_factory=list)
+    prior_answers: List[PriorAnswer] = Field(default_factory=list)
 
 
 class Scores(BaseModel):
@@ -156,7 +191,14 @@ class AnswerRecord(BaseModel):
     feedback: str
     scores: Scores
     improved_answer: str
-    evidence: List[str] = []
+    evidence: List[str] = Field(default_factory=list)
+    competency: Optional[CompetencyPlanItem] = None
+    competency_assessment: CompetencyAssessment = Field(
+        default_factory=CompetencyAssessment
+    )
+    consistency_check: ConsistencyCheck = Field(
+        default_factory=ConsistencyCheck
+    )
 
 
 class FinalReportRequest(BaseModel):
@@ -217,6 +259,53 @@ EVALUATION_SCHEMA = {
         },
         "is_complete": {
             "type": "boolean"
+        },
+        "competency_assessment": {
+            "type": "object",
+            "properties": {
+                "performance_level": {
+                    "type": "string",
+                    "enum": ["Strong", "Developing", "Needs practice"]
+                },
+                "demonstrated": {
+                    "type": "array",
+                    "items": {"type": "string"}
+                },
+                "improvement_focus": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "performance_level",
+                "demonstrated",
+                "improvement_focus"
+            ],
+            "additionalProperties": False
+        },
+        "consistency_check": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string",
+                    "enum": [
+                        "consistent",
+                        "needs_clarification",
+                        "not_enough_information"
+                    ]
+                },
+                "note": {
+                    "type": "string"
+                },
+                "compared_with": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "status",
+                "note",
+                "compared_with"
+            ],
+            "additionalProperties": False
         }
     },
     "required": [
@@ -227,7 +316,9 @@ EVALUATION_SCHEMA = {
         "scores",
         "improved_answer",
         "next_question",
-        "is_complete"
+        "is_complete",
+        "competency_assessment",
+        "consistency_check"
     ],
     "additionalProperties": False
 }
@@ -256,6 +347,33 @@ FINAL_REPORT_SCHEMA = {
                 "Developing Well",
                 "Interview Ready"
             ]
+        },
+        "retest_recommendation": {
+            "type": "object",
+            "properties": {
+                "competency_label": {"type": "string"},
+                "reason": {"type": "string"},
+                "scenario_question": {"type": "string"}
+            },
+            "required": [
+                "competency_label",
+                "reason",
+                "scenario_question"
+            ],
+            "additionalProperties": False
+        },
+        "seven_day_sprint": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "day": {"type": "integer"},
+                    "focus": {"type": "string"},
+                    "task": {"type": "string"}
+                },
+                "required": ["day", "focus", "task"],
+                "additionalProperties": False
+            }
         }
     },
     "required": [
@@ -264,7 +382,9 @@ FINAL_REPORT_SCHEMA = {
         "strengths",
         "improvement_areas",
         "action_plan",
-        "interview_readiness"
+        "interview_readiness",
+        "retest_recommendation",
+        "seven_day_sprint"
     ],
     "additionalProperties": False
 }
@@ -339,6 +459,22 @@ def basic_answer_problem(answer):
     return None
 
 
+def get_default_competency_assessment(reason):
+    return {
+        "performance_level": "Not assessed",
+        "demonstrated": [],
+        "improvement_focus": reason,
+    }
+
+
+def get_default_consistency_check():
+    return {
+        "status": "not_enough_information",
+        "note": "Not enough information was available to compare this answer.",
+        "compared_with": "",
+    }
+
+
 def invalid_evaluation(reason):
     return {
         "requires_retry": True,
@@ -356,7 +492,9 @@ def invalid_evaluation(reason):
         },
         "improved_answer": "",
         "next_question": "",
-        "is_complete": False
+        "is_complete": False,
+        "competency_assessment": get_default_competency_assessment(reason),
+        "consistency_check": get_default_consistency_check(),
     }
 
 
@@ -380,13 +518,15 @@ def clean_job_description(text):
     return cleaned_text[:MAX_JOB_DESCRIPTION_LENGTH]
 
 
-def build_session_plan(interview_type):
-    focus_options = list(
-        QUESTION_FOCUS_BANK.get(
-            interview_type,
-            QUESTION_FOCUS_BANK["default"],
-        )
+def get_all_competencies(interview_type):
+    return QUESTION_FOCUS_BANK.get(
+        interview_type,
+        QUESTION_FOCUS_BANK["default"],
     )
+
+
+def build_session_plan(interview_type):
+    focus_options = list(get_all_competencies(interview_type))
 
     random.SystemRandom().shuffle(focus_options)
 
@@ -426,6 +566,33 @@ def build_recent_questions_context(recent_questions):
         "or testing the same exact intent as any of these questions:\n- "
         + "\n- ".join(cleaned_questions)
     )
+
+
+def build_prior_answers_context(prior_answers):
+    cleaned_items = []
+
+    for item in prior_answers[-10:]:
+        question = re.sub(r"\s+", " ", item.question or "").strip()
+        answer = re.sub(r"\s+", " ", item.answer or "").strip()
+
+        if len(question) < 8 or len(answer) < 8:
+            continue
+
+        competency_label = (
+            f" [{item.competency_label}]"
+            if item.competency_label
+            else ""
+        )
+
+        cleaned_items.append(
+            f"Question{competency_label}: {question[:180]}\n"
+            f"Answer: {answer[:340]}"
+        )
+
+    if not cleaned_items:
+        return "No earlier answers are available for comparison."
+
+    return "\n\n".join(cleaned_items)
 
 
 def get_resume_context(interview_type, resume_text):
@@ -526,8 +693,11 @@ You are conducting a {interview_type} for a student or fresher.
 
 {interview_context}
 
+Competency being tested:
+{question_focus["label"]}
+
 Focus area for this question:
-{question_focus}
+{question_focus["focus"]}
 
 {previous_context}
 
@@ -539,7 +709,7 @@ Generate one realistic interview question.
 Rules:
 - Ask only one question.
 - Do not provide an answer, hint, or explanation.
-- Ask from the specified focus area.
+- Ask from the specified competency and focus area.
 - Make the wording natural and specific.
 - Do not repeat or closely rephrase a recent question.
 - Avoid generic repeated questions such as "Tell me about yourself" unless that
@@ -579,6 +749,234 @@ Rules:
         )
 
     return question
+
+
+def get_current_competency(data):
+    if data.current_competency:
+        return data.current_competency
+
+    if len(data.session_plan) >= MAX_QUESTIONS:
+        return data.session_plan[data.question_number - 1]
+
+    fallback_plan = build_session_plan(data.interview_type)
+    return CompetencyPlanItem(**fallback_plan[data.question_number - 1])
+
+
+def get_competency_status_from_score(score):
+    if score >= 8:
+        return "Strong"
+
+    if score >= 5:
+        return "Developing"
+
+    return "Needs practice"
+
+
+def build_coverage_report(interview_type, history):
+    all_competencies = get_all_competencies(interview_type)
+    answers_by_competency = {}
+
+    for record in history:
+        if not record.competency:
+            continue
+
+        answers_by_competency.setdefault(record.competency.id, []).append(record)
+
+    tested_count = len(answers_by_competency)
+    total_count = len(all_competencies) or 1
+    coverage_confidence = round((tested_count / total_count) * 100)
+
+    if coverage_confidence >= 70:
+        coverage_status = "Good coverage"
+        coverage_note = (
+            "This session tested a broad set of independent interview skills. "
+            "Use future sessions to cover the remaining untested areas."
+        )
+    elif coverage_confidence >= 45:
+        coverage_status = "Partial coverage"
+        coverage_note = (
+            "This session covered some important skills, but the readiness "
+            "result should be treated as provisional until more areas are tested."
+        )
+    else:
+        coverage_status = "Limited coverage"
+        coverage_note = (
+            "Too few independent competencies were tested to make a strong "
+            "readiness conclusion."
+        )
+
+    competency_map = []
+
+    for item in all_competencies:
+        matching_answers = answers_by_competency.get(item["id"], [])
+
+        if not matching_answers:
+            competency_map.append({
+                "id": item["id"],
+                "label": item["label"],
+                "status": "Untested",
+                "average_score": None,
+                "note": "Not tested in this session.",
+            })
+            continue
+
+        average_score = round(
+            sum(answer.scores.overall for answer in matching_answers)
+            / len(matching_answers)
+        )
+
+        assessment = matching_answers[-1].competency_assessment
+        note = assessment.improvement_focus.strip()
+
+        if not note and assessment.demonstrated:
+            note = assessment.demonstrated[0]
+
+        competency_map.append({
+            "id": item["id"],
+            "label": item["label"],
+            "status": get_competency_status_from_score(average_score),
+            "average_score": average_score,
+            "note": note or "This competency was tested in the session.",
+        })
+
+    weak_or_untested = [
+        item for item in competency_map
+        if item["status"] in ["Needs practice", "Untested"]
+    ]
+
+    return {
+        "coverage_confidence": coverage_confidence,
+        "coverage_status": coverage_status,
+        "coverage_note": coverage_note,
+        "tested_competencies": tested_count,
+        "total_competencies": total_count,
+        "competency_map": competency_map,
+        "priority_areas": weak_or_untested[:3],
+    }
+
+
+def build_consistency_overview(history):
+    flags = []
+
+    for record in history:
+        check = record.consistency_check
+
+        if check.status == "needs_clarification":
+            flags.append({
+                "question": record.question,
+                "note": check.note,
+                "compared_with": check.compared_with,
+            })
+
+    if flags:
+        return {
+            "status": "Needs clarification",
+            "message": (
+                "Some answers included details that may sound inconsistent. "
+                "Review them before a real interview so you can explain the context clearly."
+            ),
+            "flags": flags,
+        }
+
+    return {
+        "status": "No clear contradictions found",
+        "message": (
+            "PrepPilot did not find a clear direct contradiction in the answers "
+            "it compared. This is guidance, not a factual verification."
+        ),
+        "flags": [],
+    }
+
+
+def choose_retest_target(history, coverage):
+    if history:
+        strong_answers = [
+            record for record in history
+            if record.scores.overall >= 8 and record.competency
+        ]
+
+        if strong_answers:
+            selected = strong_answers[0]
+            return {
+                "competency_label": selected.competency.label,
+                "reason": (
+                    "You scored well here. A new scenario checks whether you can "
+                    "apply the same skill instead of repeating a memorised answer."
+                ),
+                "source_question": selected.question,
+                "source_answer": selected.answer,
+            }
+
+    priority_areas = coverage.get("priority_areas", [])
+
+    if priority_areas:
+        selected = priority_areas[0]
+        return {
+            "competency_label": selected["label"],
+            "reason": (
+                "This area was weak or untested, so a scenario question will "
+                "help you build usable interview confidence."
+            ),
+            "source_question": "",
+            "source_answer": "",
+        }
+
+    return {
+        "competency_label": "Practical problem-solving",
+        "reason": "A scenario question checks how you apply your knowledge.",
+        "source_question": "",
+        "source_answer": "",
+    }
+
+
+def build_default_sprint(coverage):
+    areas = coverage.get("priority_areas", [])
+
+    if not areas:
+        areas = coverage.get("competency_map", [])[:3]
+
+    focus_labels = [area.get("label", "Interview practice") for area in areas]
+
+    while len(focus_labels) < 3:
+        focus_labels.append("Interview practice")
+
+    return [
+        {
+            "day": 1,
+            "focus": focus_labels[0],
+            "task": "Review one concept and write a 4 to 6 sentence answer using a real example."
+        },
+        {
+            "day": 2,
+            "focus": focus_labels[1],
+            "task": "Practise one scenario question aloud and record the key steps in your answer."
+        },
+        {
+            "day": 3,
+            "focus": focus_labels[2],
+            "task": "Study one weak area and solve one small practical problem related to it."
+        },
+        {
+            "day": 4,
+            "focus": "Answer structure",
+            "task": "Rewrite two answers using Situation, Action, Result, and Learning."
+        },
+        {
+            "day": 5,
+            "focus": focus_labels[0],
+            "task": "Take a short retest with a different scenario instead of repeating the same answer."
+        },
+        {
+            "day": 6,
+            "focus": "Consistency",
+            "task": "Review project, skill, and technology claims so your examples remain clear and consistent."
+        },
+        {
+            "day": 7,
+            "focus": "Mock interview",
+            "task": "Complete another PrepPilot session and compare the new competency map with this one."
+        },
+    ]
 
 
 @app.get("/")
@@ -663,10 +1061,11 @@ async def extract_resume(resume: UploadFile = File(...)):
 @app.post("/start-interview")
 def start_interview(data: StartInterviewRequest):
     session_plan = build_session_plan(data.interview_type)
+    first_competency = session_plan[0]
 
     first_question = generate_question(
         interview_type=data.interview_type,
-        question_focus=session_plan[0],
+        question_focus=first_competency,
         resume_text=data.resume_text,
         job_description=data.job_description,
         recent_questions=data.recent_questions,
@@ -674,6 +1073,7 @@ def start_interview(data: StartInterviewRequest):
 
     return {
         "question": first_question,
+        "question_metadata": first_competency,
         "session_plan": session_plan,
     }
 
@@ -692,6 +1092,7 @@ def evaluate_answer(data: InterviewRequest):
         return invalid_evaluation(local_problem)
 
     is_final_question = data.question_number == MAX_QUESTIONS
+    current_competency = get_current_competency(data)
 
     interview_context = get_interview_context(
         data.interview_type,
@@ -699,11 +1100,19 @@ def evaluate_answer(data: InterviewRequest):
         data.job_description
     )
 
+    prior_answers_context = build_prior_answers_context(data.prior_answers)
+
     prompt = f"""
 You are a strict but supportive AI interview evaluator.
 
 Interview type: {data.interview_type}
 Question number: {data.question_number} out of {MAX_QUESTIONS}
+
+Competency being tested:
+{current_competency.label}
+
+Focus:
+{current_competency.focus}
 
 {interview_context}
 
@@ -712,6 +1121,9 @@ Question:
 
 Candidate answer:
 {data.user_answer}
+
+Earlier answers for consistency comparison:
+{prior_answers_context}
 
 Important grading rules:
 
@@ -729,18 +1141,29 @@ Important grading rules:
    - Give realistic scores from 1 to 10.
    - Include 1 or 2 concrete facts from the answer in evidence.
    - Do not give high scores for short or vague answers.
-6. For Resume-Based Interview mode:
+6. For competency_assessment:
+   - Use Strong only when the answer provides specific, relevant evidence.
+   - Use Developing when the answer is relevant but incomplete or vague.
+   - Use Needs practice when the answer lacks important reasoning or evidence.
+7. For consistency_check:
+   - Use needs_clarification ONLY for a clear direct conflict about the same
+     project, role, technology, date, or factual claim.
+   - Do not flag different projects, different project versions, changed tools,
+     or missing detail as contradictions.
+   - Do not call the candidate dishonest.
+   - Use not_enough_information when comparison is not possible.
+8. For Resume-Based Interview mode:
    - Do not praise achievements or technologies absent from the resume.
-7. For Job Description-Based Interview mode:
+9. For Job Description-Based Interview mode:
    - Check whether the answer addresses skills or responsibilities relevant
      to the job description.
    - Do not praise irrelevant skills that do not match the role.
-8. Set next_question to an empty string. The backend generates the next
-   question separately to maintain question variety.
-9. If this is question 5:
-   - Set is_complete to true.
-10. If this is not question 5:
-   - Set is_complete to false.
+10. Set next_question to an empty string. The backend generates the next
+    question separately to maintain competency coverage.
+11. If this is question 5:
+    - Set is_complete to true.
+12. If this is not question 5:
+    - Set is_complete to false.
 """
 
     result = call_ai_with_schema(
@@ -749,7 +1172,7 @@ Important grading rules:
                 "role": "system",
                 "content": (
                     "You are an evidence-based interview evaluator. "
-                    "Never invent positives."
+                    "Never invent positives or contradictions."
                 )
             },
             {
@@ -759,7 +1182,7 @@ Important grading rules:
         ],
         schema_name="interview_evaluation",
         schema=EVALUATION_SCHEMA,
-        max_tokens=2800,
+        max_tokens=3000,
         temperature=0.1,
     )
 
@@ -795,30 +1218,38 @@ Important grading rules:
         }
 
     result["scores"] = cleaned_scores
+    result["competency"] = current_competency.model_dump()
     result["is_complete"] = is_final_question
 
     if is_final_question:
         result["next_question"] = ""
+        result["next_question_metadata"] = None
     else:
         session_plan = data.session_plan
 
         if len(session_plan) < MAX_QUESTIONS:
-            session_plan = build_session_plan(data.interview_type)
+            session_plan = [
+                CompetencyPlanItem(**item)
+                for item in build_session_plan(data.interview_type)
+            ]
 
-        next_focus = session_plan[data.question_number]
+        next_competency = session_plan[data.question_number]
 
         question_history = list(data.recent_questions)
         question_history.append(data.current_question)
 
-        result["next_question"] = generate_question(
+        next_question = generate_question(
             interview_type=data.interview_type,
-            question_focus=next_focus,
+            question_focus=next_competency.model_dump(),
             resume_text=data.resume_text,
             job_description=data.job_description,
             recent_questions=question_history,
             previous_question=data.current_question,
             previous_answer=data.user_answer,
         )
+
+        result["next_question"] = next_question
+        result["next_question_metadata"] = next_competency.model_dump()
 
     result["requires_retry"] = False
 
@@ -838,6 +1269,9 @@ def generate_final_report(data: FinalReportRequest):
     )
 
     readiness = get_readiness_level(calculated_score)
+    coverage = build_coverage_report(data.interview_type, data.history)
+    consistency_overview = build_consistency_overview(data.history)
+    retest_target = choose_retest_target(data.history, coverage)
 
     if calculated_score <= 3:
         return {
@@ -859,7 +1293,18 @@ def generate_final_report(data: FinalReportRequest):
                 "Use the STAR method for HR questions.",
                 "Review the improved answers and rewrite your own version."
             ],
-            "interview_readiness": "Needs More Practice"
+            "interview_readiness": "Needs More Practice",
+            "coverage": coverage,
+            "consistency_overview": consistency_overview,
+            "retest_recommendation": {
+                "competency_label": retest_target["competency_label"],
+                "reason": retest_target["reason"],
+                "scenario_question": (
+                    "Choose one real project or learning experience and explain "
+                    "what you would do differently if the same problem happened again."
+                ),
+            },
+            "seven_day_sprint": build_default_sprint(coverage),
         }
 
     history_json = json.dumps(
@@ -872,6 +1317,9 @@ def generate_final_report(data: FinalReportRequest):
         data.job_description
     )
 
+    coverage_json = json.dumps(coverage, indent=2)
+    retest_target_json = json.dumps(retest_target, indent=2)
+
     prompt = f"""
 Create a final report for this {data.interview_type}.
 
@@ -880,11 +1328,18 @@ The interview readiness is exactly: {readiness}.
 
 {job_description_context}
 
+Competency coverage data:
+{coverage_json}
+
+Recommended retest target:
+{retest_target_json}
+
 Interview data:
 {history_json}
 
 Rules:
-1. Use ONLY evidence from answers and evidence fields.
+1. Use ONLY evidence from answers, evidence fields, competency assessments,
+   coverage data, and consistency checks.
 2. Do not invent strengths such as willingness to learn, adaptability,
    leadership, or problem-solving unless the interview data proves it.
 3. Every strength must mention what answer evidence supports it.
@@ -892,8 +1347,11 @@ Rules:
    "No clear strength was demonstrated in this area."
 5. Do not change the calculated score or readiness level.
 6. Give practical and specific improvement actions.
-7. For Job Description-Based Interview mode, tailor the improvement actions
-   to the role requirements in the job description.
+7. Create exactly 7 seven_day_sprint items, one per day from 1 to 7.
+8. The scenario_question must test the retest competency through a NEW scenario.
+   It must not repeat the original question or provide the answer.
+9. For Job Description-Based Interview mode, tailor improvement actions and
+   the sprint to the role requirements in the job description.
 """
 
     result = call_ai_with_schema(
@@ -902,7 +1360,7 @@ Rules:
                 "role": "system",
                 "content": (
                     "You create evidence-based student interview reports. "
-                    "Never invent positives."
+                    "Never invent positives, facts, or contradictions."
                 )
             },
             {
@@ -912,11 +1370,13 @@ Rules:
         ],
         schema_name="final_report",
         schema=FINAL_REPORT_SCHEMA,
-        max_tokens=2800,
-        temperature=0.1,
+        max_tokens=3600,
+        temperature=0.15,
     )
 
     result["overall_score"] = calculated_score
     result["interview_readiness"] = readiness
+    result["coverage"] = coverage
+    result["consistency_overview"] = consistency_overview
 
     return result

@@ -62,7 +62,9 @@ function InterviewRoomPage() {
   const [errorMessage, setErrorMessage] = useState("");
 
   const [sessionPlan, setSessionPlan] = useState([]);
+  const [currentCompetency, setCurrentCompetency] = useState(null);
   const [recentQuestions, setRecentQuestions] = useState([]);
+  const [recentAnswerContext, setRecentAnswerContext] = useState([]);
 
   const recognitionRef = useRef(null);
 
@@ -118,26 +120,42 @@ function InterviewRoomPage() {
     };
   }, [user, isResumeMode]);
 
-  const getRecentQuestions = async () => {
+  const getRecentPracticeContext = async () => {
     if (!user) {
-      return [];
+      return {
+        questions: [],
+        answers: [],
+      };
     }
 
     const { data, error } = await supabase
       .from("interview_answers")
-      .select("question")
+      .select("question, user_answer, competency")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false })
-      .limit(20);
+      .limit(12);
 
     if (error) {
-      console.warn("Could not load previous questions:", error.message);
-      return [];
+      console.warn("Could not load previous practice context:", error.message);
+
+      return {
+        questions: [],
+        answers: [],
+      };
     }
 
-    return (data || [])
-      .map((item) => item.question)
-      .filter(Boolean);
+    const savedAnswers = (data || [])
+      .filter((item) => item.question && item.user_answer)
+      .map((item) => ({
+        question: item.question,
+        answer: item.user_answer,
+        competency_label: item.competency || "",
+      }));
+
+    return {
+      questions: savedAnswers.map((item) => item.question),
+      answers: savedAnswers,
+    };
   };
 
   const getAnswerValidationError = (text) => {
@@ -374,6 +392,9 @@ function InterviewRoomPage() {
     setVoiceMessage("");
     setVoiceError(false);
     setSessionPlan([]);
+    setCurrentCompetency(null);
+    setRecentQuestions([]);
+    setRecentAnswerContext([]);
 
     try {
       let activeResumeText = resumeText;
@@ -410,9 +431,10 @@ function InterviewRoomPage() {
         );
       }
 
-      const savedQuestions = await getRecentQuestions();
+      const practiceContext = await getRecentPracticeContext();
 
-      setRecentQuestions(savedQuestions);
+      setRecentQuestions(practiceContext.questions);
+      setRecentAnswerContext(practiceContext.answers);
 
       const response = await axios.post(
         `${API_BASE_URL}/start-interview`,
@@ -422,7 +444,7 @@ function InterviewRoomPage() {
           job_description: isJobDescriptionMode
             ? activeJobDescription
             : null,
-          recent_questions: savedQuestions,
+          recent_questions: practiceContext.questions,
         }
       );
 
@@ -431,6 +453,7 @@ function InterviewRoomPage() {
       }
 
       setCurrentQuestion(response.data.question);
+      setCurrentCompetency(response.data.question_metadata || null);
       setSessionPlan(response.data.session_plan || []);
     } catch (error) {
       setErrorMessage(
@@ -481,6 +504,9 @@ function InterviewRoomPage() {
       evidence: item.evidence || [],
       scores: item.scores,
       improved_answer: item.improved_answer,
+      competency: item.competency?.label || "",
+      competency_assessment: item.competency_assessment || {},
+      consistency_check: item.consistency_check || {},
     }));
 
     const { error: answersError } = await supabase
@@ -536,11 +562,20 @@ function InterviewRoomPage() {
             ? jobDescription.trim()
             : null,
           session_plan: sessionPlan,
+          current_competency: currentCompetency,
           recent_questions: [
             ...recentQuestions,
             ...history.map((item) => item.question),
             questionBeingAnswered,
           ],
+          prior_answers: [
+            ...recentAnswerContext,
+            ...history.map((item) => ({
+              question: item.question,
+              answer: item.answer,
+              competency_label: item.competency?.label || "",
+            })),
+          ].slice(-10),
         }
       );
 
@@ -560,6 +595,9 @@ function InterviewRoomPage() {
         scores: evaluation.scores,
         evidence: evaluation.evidence || [],
         improved_answer: evaluation.improved_answer,
+        competency: evaluation.competency || currentCompetency,
+        competency_assessment: evaluation.competency_assessment || {},
+        consistency_check: evaluation.consistency_check || {},
       };
 
       const updatedHistory = [...history, newRecord];
@@ -602,6 +640,7 @@ function InterviewRoomPage() {
 
       setHistory(updatedHistory);
       setCurrentQuestion(evaluation.next_question);
+      setCurrentCompetency(evaluation.next_question_metadata || null);
       setQuestionNumber((previousNumber) => previousNumber + 1);
       setAnswer("");
       setVoiceMessage("");
@@ -815,6 +854,12 @@ function InterviewRoomPage() {
             </span>
           </div>
 
+          {currentCompetency && (
+            <div className="pp-competency-chip">
+              Testing competency: <strong>{currentCompetency.label}</strong>
+            </div>
+          )}
+
           <h2 className="pp-live-question">{currentQuestion}</h2>
 
           <div className="pp-voice-panel">
@@ -935,6 +980,40 @@ function InterviewRoomPage() {
             <p>{feedback.feedback}</p>
           </div>
 
+          {!feedback.requires_retry && feedback.competency_assessment && (
+            <div className="pp-feedback-card pp-competency-feedback-card">
+              <h3>Competency progress</h3>
+              <p>
+                <strong>{feedback.competency_assessment.performance_level || "Developing"}</strong>
+                {" · "}
+                {feedback.competency_assessment.improvement_focus ||
+                  "Keep using specific examples to make this skill more visible."}
+              </p>
+
+              {feedback.competency_assessment.demonstrated?.length > 0 && (
+                <ul className="pp-evidence-list">
+                  {feedback.competency_assessment.demonstrated.map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
+
+          {!feedback.requires_retry &&
+            feedback.consistency_check?.status === "needs_clarification" && (
+              <div className="pp-feedback-card pp-consistency-warning">
+                <h3>Answer consistency coach</h3>
+                <p>{feedback.consistency_check.note}</p>
+
+                {feedback.consistency_check.compared_with && (
+                  <p className="pp-consistency-context">
+                    Compared with: {feedback.consistency_check.compared_with}
+                  </p>
+                )}
+              </div>
+            )}
+
           {!feedback.requires_retry &&
             feedback.evidence?.length > 0 && (
               <div className="pp-feedback-card">
@@ -976,6 +1055,34 @@ function InterviewRoomPage() {
             <strong>{finalReport.interview_readiness}</strong>
           </div>
 
+          {finalReport.coverage && (
+            <div className="pp-coverage-overview">
+              <div>
+                <span>Coverage confidence</span>
+                <strong>{finalReport.coverage.coverage_confidence || 0}%</strong>
+                <p>{finalReport.coverage.coverage_status}</p>
+              </div>
+
+              <div className="pp-coverage-meter" aria-hidden="true">
+                <span
+                  style={{
+                    width: `${Math.max(
+                      0,
+                      Math.min(
+                        100,
+                        Number(finalReport.coverage.coverage_confidence || 0)
+                      )
+                    )}%`,
+                  }}
+                />
+              </div>
+
+              <p className="pp-coverage-note">
+                {finalReport.coverage.coverage_note}
+              </p>
+            </div>
+          )}
+
           <div className="pp-feedback-card pp-report-summary">
             <h3>Overall summary</h3>
             <p>{finalReport.summary}</p>
@@ -1012,6 +1119,92 @@ function InterviewRoomPage() {
               ))}
             </ol>
           </div>
+
+          {finalReport.coverage?.competency_map?.length > 0 && (
+            <div className="pp-competency-map-card">
+              <h3>Competency map</h3>
+              <p>
+                Your score is useful only when enough independent skills are tested.
+                This map shows what PrepPilot covered in this session.
+              </p>
+
+              <div className="pp-competency-map">
+                {finalReport.coverage.competency_map.map((item) => (
+                  <div className="pp-competency-map-item" key={item.id}>
+                    <div>
+                      <strong>{item.label}</strong>
+                      <span>{item.note || "No extra note available."}</span>
+                    </div>
+
+                    <span
+                      className={`pp-competency-status pp-competency-status-${String(
+                        item.status || "Untested"
+                      )
+                        .toLowerCase()
+                        .replaceAll(" ", "-")}`}
+                    >
+                      {item.average_score ? `${item.status} · ${item.average_score}/10` : item.status}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {finalReport.consistency_overview && (
+            <div
+              className={`pp-consistency-summary ${
+                finalReport.consistency_overview.flags?.length
+                  ? "pp-consistency-summary-warning"
+                  : ""
+              }`}
+            >
+              <h3>Answer consistency coach</h3>
+              <p>{finalReport.consistency_overview.message}</p>
+
+              {finalReport.consistency_overview.flags?.length > 0 && (
+                <ul className="pp-evidence-list">
+                  {finalReport.consistency_overview.flags.map((item, index) => (
+                    <li key={index}>{item.note}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
+
+          {finalReport.retest_recommendation && (
+            <div className="pp-retest-card">
+              <div>
+                <p className="section-label">UNDERSTANDING RETEST</p>
+                <h3>{finalReport.retest_recommendation.competency_label}</h3>
+                <p>{finalReport.retest_recommendation.reason}</p>
+              </div>
+
+              <div className="pp-retest-question">
+                <strong>Use this new scenario in your next practice:</strong>
+                <p>{finalReport.retest_recommendation.scenario_question}</p>
+              </div>
+            </div>
+          )}
+
+          {finalReport.seven_day_sprint?.length > 0 && (
+            <div className="pp-sprint-card">
+              <div>
+                <p className="section-label">7-DAY IMPROVEMENT SPRINT</p>
+                <h3>Turn this report into measurable progress</h3>
+              </div>
+
+              <div className="pp-sprint-list">
+                {finalReport.seven_day_sprint.map((item) => (
+                  <div className="pp-sprint-day" key={item.day}>
+                    <span>DAY {item.day}</span>
+                    <strong>{item.focus}</strong>
+                    <p>{item.task}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="pp-report-actions">
             <button

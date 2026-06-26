@@ -971,3 +971,304 @@
     flex: 1;
   }
 }
+
+
+/* PrepPilot assessment intelligence */
+
+.pp-competency-chip {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 10px;
+  border: 1px solid #d9e1f3;
+  border-radius: 999px;
+  color: #526aa8;
+  background: #f3f6ff;
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.pp-competency-chip strong {
+  color: #405b9f;
+}
+
+.pp-competency-feedback-card {
+  border-color: #dae4fb;
+  background: #f7f9ff;
+}
+
+.pp-competency-feedback-card .pp-evidence-list {
+  margin-top: 10px;
+}
+
+.pp-consistency-warning {
+  border-color: #f0dbad;
+  background: #fffaf0;
+}
+
+.pp-consistency-warning h3 {
+  color: #8d6821;
+}
+
+.pp-consistency-context {
+  margin-top: 8px !important;
+  color: #917237 !important;
+  font-size: 11px !important;
+  font-weight: 750;
+}
+
+.pp-coverage-overview {
+  display: grid;
+  grid-template-columns: auto minmax(150px, 1fr);
+  gap: 12px 18px;
+  align-items: center;
+  margin-top: 14px;
+  padding: 16px;
+  border: 1px solid #dce5f7;
+  border-radius: 12px;
+  background: #f8faff;
+}
+
+.pp-coverage-overview > div:first-child {
+  display: grid;
+  gap: 3px;
+}
+
+.pp-coverage-overview > div:first-child span {
+  color: #66738f;
+  font-size: 10px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.pp-coverage-overview > div:first-child strong {
+  color: #405d9f;
+  font-size: 24px;
+}
+
+.pp-coverage-overview > div:first-child p {
+  margin: 0;
+  color: #64728f;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.pp-coverage-meter {
+  height: 10px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e5ebf7;
+}
+
+.pp-coverage-meter span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #617bd1, #7e9ce0);
+}
+
+.pp-coverage-note {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: #718099;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.pp-competency-map-card,
+.pp-consistency-summary,
+.pp-retest-card,
+.pp-sprint-card {
+  margin-top: 14px;
+  padding: 17px;
+  border: 1px solid #e1e7f2;
+  border-radius: 12px;
+  background: #fcfdff;
+}
+
+.pp-competency-map-card h3,
+.pp-consistency-summary h3,
+.pp-retest-card h3,
+.pp-sprint-card h3 {
+  margin: 0;
+  color: #3b496b;
+  font-size: 14px;
+}
+
+.pp-competency-map-card > p,
+.pp-consistency-summary > p,
+.pp-retest-card > div > p,
+.pp-sprint-card > div > p {
+  margin: 7px 0 0;
+  color: #6d7a92;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.pp-competency-map {
+  display: grid;
+  gap: 9px;
+  margin-top: 14px;
+}
+
+.pp-competency-map-item {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  border: 1px solid #e5eaf4;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.pp-competency-map-item > div {
+  display: grid;
+  min-width: 0;
+  gap: 4px;
+}
+
+.pp-competency-map-item strong {
+  color: #435171;
+  font-size: 12px;
+}
+
+.pp-competency-map-item span:not(.pp-competency-status) {
+  color: #7c879c;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.pp-competency-status {
+  flex: 0 0 auto;
+  padding: 6px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.pp-competency-status-strong {
+  color: #3f7856;
+  background: #edf8f1;
+}
+
+.pp-competency-status-developing {
+  color: #6070ab;
+  background: #edf1ff;
+}
+
+.pp-competency-status-needs-practice {
+  color: #a06a28;
+  background: #fff6e8;
+}
+
+.pp-competency-status-untested {
+  color: #768196;
+  background: #f0f2f6;
+}
+
+.pp-consistency-summary {
+  border-color: #d9e5fb;
+  background: #f7f9ff;
+}
+
+.pp-consistency-summary-warning {
+  border-color: #f0dbad;
+  background: #fffaf0;
+}
+
+.pp-consistency-summary .pp-evidence-list {
+  margin-top: 10px;
+}
+
+.pp-retest-card {
+  display: grid;
+  grid-template-columns: 0.78fr 1.22fr;
+  gap: 16px;
+  border-color: #d8e7df;
+  background: #f7fcf8;
+}
+
+.pp-retest-question {
+  padding: 13px;
+  border: 1px solid #dcebe1;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.pp-retest-question strong {
+  color: #3e6f51;
+  font-size: 11px;
+}
+
+.pp-retest-question p {
+  margin: 7px 0 0;
+  color: #5f6f67;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.pp-sprint-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.pp-sprint-day {
+  display: grid;
+  gap: 5px;
+  padding: 13px;
+  border: 1px solid #e2e7f2;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.pp-sprint-day span {
+  color: #6479ba;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.6px;
+}
+
+.pp-sprint-day strong {
+  color: #465373;
+  font-size: 12px;
+}
+
+.pp-sprint-day p {
+  margin: 0;
+  color: #748098;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.pp-review-question-top {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@media (max-width: 680px) {
+  .pp-coverage-overview,
+  .pp-retest-card {
+    grid-template-columns: 1fr;
+  }
+
+  .pp-sprint-list {
+    grid-template-columns: 1fr;
+  }
+
+  .pp-competency-map-item,
+  .pp-review-question-top {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .pp-competency-status {
+    white-space: normal;
+  }
+}
